@@ -15,10 +15,12 @@ closure over the name variable. Invoke outer saving the return value into
 another variable called 'inner'. */
 
 // Code Here
+var inner = outer();
 
 //Once you do that, invoke inner.
 
 //Code Here
+inner();
 
 
 
@@ -41,12 +43,17 @@ function callFriend(name) {
   return dial
 }
 
+
+
 /****** INSTRUCTIONS PROBLEM 2 ******/
 /* Above you're given a callFriend function that returns the dial function.
 Create a callJake function that when invoked with '435-555-9248' returns 'Calling Jake at 435-555-9248'
 in your console. */
 
   //Code Here
+  var callJake = callFriend("Jake");
+
+  callJake("435-555-9248");
 
 
 
@@ -65,13 +72,23 @@ in your console. */
 properly. */
 
 //Code Here
+function makeCounter() {
+  var num = 0;  //<---- num has to be out here so makeCounter can have a number to work with. Put it inside, and makeCounter won't be able to get a number.
+    function increase() {
+      return num += 1;
+   //for (var result = 0; result <= 4; result++) {
+     //return(result);
+	  //console.log(result);
+        }
+        return increase;
+    }
 
 //Uncomment this once you make your function
-//   var count = makeCounter();
-//   count(); // 1
-//   count(); // 2
-//   count(); // 3
-//   count(); // 4
+var count = makeCounter();
+    count(); // 1
+    count(); // 2
+    count(); // 3
+    count(); // 4
 
 
 
@@ -91,8 +108,8 @@ properly. */
 up/down counter. The first function is called inc, this function is responsible
 for incrementing the value once. The second function is called dec, this
 function is responsible for decrementing the value by one. You will need to use
-the module pattern to achieve this. 
-Information on the module pattern available here: 
+the module pattern to achieve this.
+Information on the module pattern available here:
 http://stackoverflow.com/questions/17776940/javascript-module-pattern-with-example?answertab=votes#tab-top
 */
 
@@ -101,13 +118,19 @@ function counterFactory(value) {
   // Code here.
 
 
-  return {
+  return { // <--------This says we are returning an object
+    inc: function() {
+      return ++value;
+    },
+    dec: function() {
+      return --value;
+    }
   }
 }
 
 
 counter = counterFactory(10);
-// counter.inc() // 11
+// counter.inc() // 11  //<----method is a function that is implicitly bound to an object. > obj.method()
 // counter.inc() // 12
 // counter.inc() // 13
 // counter.dec() // 12
@@ -134,10 +157,13 @@ function motivation(firstname, lastname) {
   var welcomeText = 'You\'re doing awesome, keep it up ';
 
   // code message function here.
+function message() {
+  return welcomeText + firstname + " " + lastname + ".";
 
+}
 
   //Uncommment this to return the value of your invoked message function
-  //return message();
+  return message();
 
 }
 
@@ -176,10 +202,14 @@ var module = (function() {
   // outside our lexical scope
   return {
     // Code here.
-  };
+    publicMethod: function() {
+      return privateMethod();
+    }
+
+  }
 
 })();
-
+module.publicMethod();
 
 
 /******************************************************************************\
@@ -194,12 +224,19 @@ var friends = ["Tom", "Dick", "Harry"];
 var secondLevelFriends = ["Anne", "Harry", "Quinton"];
 var allUsers = ["Tom", "Dick", "Harry", "Anne", "Quinton", "Katie", "Mary"];
 
-function findPotentialFriends(existingFriends) {
+function findPotentialFriends(friends) {
+  return function(str) {
+    if (friends.indexOf(str) === -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }
 
 var isNotAFriend = findPotentialFriends( friends );
-// isNotAFriend(allUsers[0]); // false
+isNotAFriend(allUsers[0]); // false
 // isNotAFriend(secondLevelFriends[2]); // true
 
 
@@ -213,7 +250,7 @@ from allUsers. */
 var potentialSecondLevelFriends = "?";
 var allPotentialFriends = "?";
 
-
+//Maybe later...
 /******************************************************************************\
 	#PROBLEM-08
 \******************************************************************************/
@@ -233,12 +270,17 @@ to 5. What we need to do is console.log(i) so that it logs like so:
 
  Fix the code below to log the desired output.
  */
-
+// function outsideFunction() {
+//   console.log("Run")
+// }
+// setTimeout(outsideFunction, 2000)
 function timeOutCounter() {
-  for (var i = 0; i <= 5; i++) {
-    setTimeout(function() {
-    	console.log(i)
-	}, i * 1000)
+  function vernonsFunction(localI) {
+    return function() {
+      console.log(localI);
+    }
+  }
+  for (var i = 0; i <= 6; i++) {
+    setTimeout(vernonsFunction(i), i * 1000)
   }
 }
-timeOutCounter();
